@@ -36,10 +36,9 @@ jobs:
         echo "Tailscale connected successfully. IP Address:"
         tailscale ip -4
 
-        - name: Maintain Connection
-        run: |
+    - name: Maintain Connection
+      run: |
         sleep 21600
 
     - name: Complete job
       run: echo "Job finished."
-
