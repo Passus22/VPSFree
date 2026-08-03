@@ -1,0 +1,26 @@
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install XFCE dan XRDP
+RUN apt-get update && apt-get install -y \
+    xfce4 \
+    xfce4-goodies \
+    xrdp \
+    sudo \
+    && rm -rf /var/lib/apt/lists/*
+
+# Buat user RDP baru (Ganti username & password sesuai keinginan)
+RUN useradd -m -s /bin/bash rdpuser && \
+    echo "rdpuser:Password123!" | chpasswd && \
+    usermod -aG sudo rdpuser
+
+# Konfigurasi XRDP agar pakai XFCE
+RUN echo "startxfce4" > /home/rdpuser/.xinitrc && \
+    chown rdpuser:rdpuser /home/rdpuser/.xinitrc
+
+# Izinkan XRDP listen ke port 3389
+EXPOSE 3389
+
+# Jalankan XRDP langsung di foreground agar kontainer tidak mati
+CMD ["sesman", "--nodaemon"]
